@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>If You Were HR - The HR Survival Game (Manga Edition)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --morning-bg: linear-gradient(135deg, #FFE5B4 0%, #FFD1DC 100%);
+            --afternoon-bg: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
+            --evening-bg: linear-gradient(135deg, #2C3E50 0%, #4CA1AF 100%);
+            --patience-color: #3498db;
+            --sanity-color: #9b59b6;
+            --boss-color: #e74c3c;
+            --border-color: #000;
+            --card-bg: #fff;
+            --text-color: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Comic Neue', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: #FFF5E6;
+        }
+        
+        body.afternoon { background: #FFE0CC; }
+        body.evening { background: #2C3E50; color: #ecf0f1; }
+        body.game-over-bg { background: #1a1a2e; color: #ecf0f1; }
+        
+        .game-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Title Screen */
+        .title-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+        
+        .game-logo {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: #e74c3c;
+            text-shadow: 4px 4px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+        
+        .game-tagline {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: #2c3e50;
+            background: #fff;
+            padding: 15px 30px;
+            border: 4px solid #000;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            transform: rotate(-2deg);
+            box-shadow: 5px 5px 0 #000;
+        }
+        
+        .title-emoji {
+            font-size: 100px;
+            margin-bottom: 30px;
+            animation: bounce 2s ease;
+        }
+        .title-screen.hidden .title-emoji {
+            animation: none;
+        }
+        
+        .start-btn {
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            padding: 20px 60px;
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: #fff;
+            border: 5px solid #000;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 8px 8px 0 #000;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        .start-btn:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0 #000;
+        }
+        
+        .start-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0 #000;
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            border: 4px solid #000;
+            border-radius: 0 0 20px 20px;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            z-index: 100;
+            display: none;
+        }
+        
+        .stats-bar.visible { display: block; }
+        
+        .stat {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .stat:last-child { margin-bottom: 0; }
+        
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            min-width: 40px;
+        }
+        
+        .stat-name {
+            font-weight: bold;
+            min-width: 100px;
+            font-size: 0.9rem;
+        }
+        
+        .stat-bar-container {
+            flex: 1;
+            height: 25px;
+            background: #ecf0f1;
+            border: 3px solid #000;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .stat-bar {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.5s ease, background-color 0.3s ease;
+            position: relative;
+        }
+        
+        .stat-bar.patience { background: linear-gradient(90deg, #3498db, #2980b9); }
+        .stat-bar.sanity { background: linear-gradient(90deg, #9b59b6, #8e44ad); }
+        .stat-bar.boss { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+        
+        .stat-value {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        /* Scene Container */
+        .scene-container {
+            display: none;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        
+        .scene-container.active { 
+            display: block; 
+            animation: sceneFadeIn 0.4s ease forwards;
+        }
+        
+        .scene-container.fading {
+            opacity: 0;
+        }
+        
+        @keyframes sceneFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Chapter Title Card */
+        .chapter-card {
+            background: #fff;
+            border: 5px solid #000;
+            border-radius: 25px;
+            padding: 50px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 10px 10px 0 #000;
+            animation: chapterCardIn 0.6s ease;
+        }
+        
+        @keyframes chapterCardIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .chapter-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .chapter-title {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        
+        .chapter-subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        
+        /* Scene Card */
+        .scene-card {
+            background: #fff;
+            border: 4px solid #000;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 4px 4px 0 #000;
+        }
+        
+        .scene-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px dashed #ecf0f1;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .scene-icon {
+            font-size: 3rem;
+            margin-right: 15px;
+        }
+        
+        .scene-title {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            color: #2c3e50;
+        }
+        
+        .scene-time {
+            background: #e74c3c;
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: auto;
+        }
+        
+        .scene-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+        
+        /* Speech Bubble - Comic Style */
+        .speech-bubble {
+            background: #f1f2f6;
+            border: 3px solid #000;
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .speaker {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .speech-text {
+            line-height: 1.7;
+            font-size: 1.05rem;
+            color: #2c3e50;
+        }
+        
+        /* Result Panel - NEW */
+        .result-panel {
+            background: linear-gradient(135deg, #fff9e6, #fff);
+            border: 4px solid #000;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            display: none;
+            animation: resultPanelIn 0.3s ease forwards;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .result-panel.visible {
+            display: block;
+        }
+        
+        @keyframes resultPanelIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-header {
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            color: #e74c3c;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .result-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .result-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .result-stat {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            border: 2px solid #000;
+        }
+        
+        .result-stat.positive { background: #d4edda; color: #155724; }
+        .result-stat.negative { background: #f8d7da; color: #721c24; }
+        
+        .continue-btn {
+            font-family: 'Bangers', cursive;
+            font-size: 1.3rem;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: #fff;
+            border: 4px solid #000;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 5px 5px 0 #000;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .continue-btn:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0 #000;
+        }
+        
+        .continue-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 2px 2px 0 #000;
+        }
+        
+        /* Manga Action Text */
+        .manga-action {
+            font-style: italic;
+            color: #e74c3c;
+            font-weight: bold;
+            padding: 10px 0;
+        }
+        
+        .internal-thought {
+            font-style: italic;
+            color: #9b59b6;
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #9b59b6;
+            margin: 15px 0;
+            font-size: 1rem;
+        }
+
+        /* Fix evening mode text colors */
+        body.evening .speech-text,
+        body.evening .option-btn,
+        body.evening .scene-description {
+            color: #2c3e50;
+        }
+        
+        /* Options */
+        .options-container {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .option-btn {
+            background: #fff;
+            border: 3px solid #000;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            text-align: left;
+            font-family: 'Comic Neue', 'Segoe UI', sans-serif;
+            font-size: 1rem;
+            box-shadow: 3px 3px 0 #000;
+            opacity: 1;
+            display: block;
+            width: 100%;
+            margin-bottom: 12px;
+            color: #2c3e50;
+        }
+        
+        .option-btn:active:not(.disabled) {
+            box-shadow: 1px 1px 0 #000;
+            transform: translate(2px, 2px);
+        }
+        
+        .option-btn.selected {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+        
+        .option-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .option-letter {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: #e74c3c;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+            font-family: 'Bangers', cursive;
+        }
+        
+        /* Game Over Screen */
+        .game-over-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeIn 1s ease;
+        }
+        
+        .game-over-screen.active { display: block; }
+        
+        .game-over-title {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(2rem, 7vw, 4rem);
+            color: #e74c3c;
+            text-shadow: 4px 4px 0 #000;
+            margin-bottom: 20px;
+        }
+        
+        .game-over-emoji {
+            font-size: 100px;
+            margin-bottom: 30px;
+        }
+        
+        .ending-card {
+            background: #fff;
+            border: 5px solid #000;
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            box-shadow: 10px 10px 0 #000;
+        }
+        
+        .ending-name {
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            color: #9b59b6;
+            margin-bottom: 15px;
+        }
+        
+        .ending-description {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #34495e;
+            margin-bottom: 30px;
+        }
+        
+        .final-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .final-stat {
+            background: #f8f9fa;
+            border: 3px solid #000;
+            border-radius: 15px;
+            padding: 15px 25px;
+            text-align: center;
+        }
+        
+        .final-stat-icon { font-size: 2rem; }
+        .final-stat-value { font-family: 'Bangers', cursive; font-size: 1.8rem; color: #2c3e50; }
+        
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            font-family: 'Bangers', cursive;
+            font-size: 1.3rem;
+            padding: 15px 40px;
+            border: 4px solid #000;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 5px 5px 0 #000;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: #fff;
+        }
+        
+        .btn-success {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: #fff;
+        }
+        
+        .btn:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0 #000;
+        }
+        
+        .btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 2px 2px 0 #000;
+        }
+        
+        /* Share Result */
+        .share-result {
+            background: #f1f2f6;
+            border: 3px dashed #000;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        
+        .share-result textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 3px solid #000;
+            border-radius: 10px;
+            font-family: 'Comic Neue', cursive;
+            font-size: 1rem;
+            resize: none;
+            margin-bottom: 15px;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: #fff;
+            padding: 10px 25px;
+            font-size: 1rem;
+        }
+        
+        /* Transitions */
+        .transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .transition-overlay.active { display: flex; }
+        
+        .transition-text {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            color: #fff;
+            animation: pulse 0.5s ease;
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .shake { animation: shake 0.5s ease; }
+        
+        /* Hidden */
+        .hidden { display: none !important; }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .game-container { padding: 10px; }
+            .scene-card { padding: 15px; }
+            .option-btn { padding: 15px; }
+            .stat-name { min-width: 70px; font-size: 0.8rem; }
+            .final-stats { gap: 15px; }
+            .final-stat { padding: 10px 15px; }
+            .chapter-card { padding: 30px 20px; }
+            .result-panel { padding: 20px 15px; }
+            .result-stat { font-size: 0.85rem; padding: 6px 12px; }
+        }
+        
+        /* Progress indicator */
+        .progress-indicator {
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.2rem;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid #000;
+            background: #ccc;
+        }
+        
+        .progress-dot.completed { background: #2ecc71; }
+        .progress-dot.current { background: #f1c40f; transform: scale(1.3); }
+        .progress-dot.secret { background: #9b59b6; }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Title Screen -->
+        <div id="title-screen" class="title-screen">
+            <div class="title-emoji">👔💼</div>
+            <h1 class="game-logo">IF YOU WERE HR</h1>
+            <p class="game-tagline">🤯 Think HR is easy? Think again, sucker. 🤯</p>
+            <button class="start-btn" onclick="startGame()">▶ START GAME</button>
+            <p style="margin-top: 30px; color: #fff; text-shadow: 1px 1px 0 #000;">
+                Your sanity is NOT guaranteed. Your patience WILL be tested.<br>
+                Your boss will be... *dramatic pause* ...your boss.
+            </p>
+        </div>
+        
+        <!-- Stats Bar -->
+        <div id="stats-bar" class="stats-bar">
+            <div class="stat">
+                <span class="stat-icon">🔵</span>
+                <span class="stat-name">Patience</span>
+                <div class="stat-bar-container">
+                    <div class="stat-bar patience" id="patience-bar" style="width: 100%;">
+                        <span class="stat-value" id="patience-value">100%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat">
+                <span class="stat-icon">🧠</span>
+                <span class="stat-name">Sanity</span>
+                <div class="stat-bar-container">
+                    <div class="stat-bar sanity" id="sanity-bar" style="width: 100%;">
+                        <span class="stat-value" id="sanity-value">100%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat">
+                <span class="stat-icon">👔</span>
+                <span class="stat-name">Boss Approval</span>
+                <div class="stat-bar-container">
+                    <div class="stat-bar boss" id="boss-bar" style="width: 50%;">
+                        <span class="stat-value" id="boss-value">50%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress Indicator -->
+        <div id="progress-indicator" class="progress-indicator hidden">
+            <span id="progress-text">Chapter 1: Morning</span>
+            <div class="progress-dots" id="progress-dots"></div>
+        </div>
+        
+        <!-- Game Content Area -->
+        <div id="game-content"></div>
+        
+        <!-- Game Over Screen -->
+        <div id="game-over-screen" class="game-over-screen">
+            <div class="game-over-emoji" id="ending-emoji">🏆</div>
+            <h1 class="game-over-title" id="ending-title">THE END</h1>
+            <div class="ending-card">
+                <h2 class="ending-name" id="ending-name"></h2>
+                <p class="ending-description" id="ending-description"></p>
+                <div class="final-stats" id="final-stats"></div>
+                <div class="share-result">
+                    <p style="margin-bottom: 10px; font-weight: bold;">📤 Share Your Result:</p>
+                    <textarea id="share-text" readonly></textarea>
+                    <button class="btn copy-btn" onclick="copyShareText()">📋 Copy to Clipboard</button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-success" onclick="restartGame()">🔄 Play Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Transition Overlay -->
+    <div id="transition-overlay" class="transition-overlay">
+        <div class="transition-text" id="transition-text"></div>
+    </div>
+
+    <script>
+        // Global error handler for debugging
+        window.onerror = function(msg, url, line, col, error) {
+            console.error('Game Error:', msg, 'at line', line, 'col', col);
+            console.error('Stack:', error ? error.stack : 'no stack');
+            return false;
+        };
+        // ============ GAME DATA ============
+        const gameData = {
+            scenes: [
+                // ========== CHAPTER 1: MORNING CHAOS ==========
+                {
+                    id: 1,
+                    chapter: 1,
+                    title: "💥 The Inbox From HELL",
+                    time: "8:02 AM",
+                    icon: "📧💥",
+                    description: "*SLAM* You slam your coffee on the desk. Today WILL be a good day, you tell yourself.<br><br>*DING*<br>*DING*<br>*DING DING DING DING DING*<br><br>...47 unread emails. Your eye twitches violently. 😤<br><br>💀 Three marked URGENT. This is how you die. Not with a bang, but with a notification sound.",
+                    dialogues: [
+                        {
+                            speaker: "📧 Employee #23",
+                            text: "I QUIT. Effective YESTERDAY. Also, you owe me 3 months salary + unused leave. Process this IMMEDIATELY. *slams desk*"
+                        },
+                        {
+                            speaker: "👑 The Boss",
+                            text: "WHY haven't you hired the 5 people I requested last week?!?! We're LOSING business! 😡 Do you even WORK here?!"
+                        },
+                        {
+                            speaker: "📧 Junior Staff",
+                            text: "Can I expense my Maldives vacation as 'team building'? My manager said MAYBE... 👉👈 *puppy eyes*"
+                        },
+                        {
+                            speaker: "⚠️ MOHRE (Government)",
+                            text: "VISA RENEWALS for 8 employees expire in 3 DAYS. Missing documents attached. Failure to renew = AED 50,000 FINE. This is not a drill."
+                        },
+                        {
+                            speaker: "❄️ Anonymous Employee",
+                            text: "The AC in my section is too cold. 🥶 This is HARASSMENT. I'm considering legal action. Prepare to be SUED."
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "🏳️ Wave the white flag — handle the government email first (compliance > everything)",
+                            result: "*sweat drop* Smart move. The fine would've been 10x your annual salary. BUT... your boss notices those empty roles. *vein pops* He's NOT happy about it.",
+                            stats: { sanity: 15, boss: -10 }
+                        },
+                        {
+                            letter: "B",
+                            text: "👑 Bow to the throne — reply to the boss FIRST (he's always right, right?)",
+                            result: "The CEO smiles at his screen. You're his FAVORITE. But tomorrow... MOHRE fines the company AED 400,000. Guess who takes the blame? *evil laugh from HR department*",
+                            stats: { boss: 15, sanity: -20 }
+                        },
+                        {
+                            letter: "C",
+                            text: "🔄 Handle the resignation — at least THAT'S straightforward... right?",
+                            result: "*record scratch* Employee #23 doesn't actually quit. He was 'just frustrated after Monday.' Now you have the most AWKWARD conversation of your life. AND the visas? Still expiring. 🥲",
+                            stats: { sanity: -10, patience: -5 }
+                        },
+                        {
+                            letter: "D",
+                            text: "📭 Forward all to your assistant and go get coffee (you deserve it)",
+                            result: "💀💀💀 GAME OVER: Your assistant forwards them back with 'I thought YOU handled these.' *surprised pikachu face* The visas expire. The fine hits. You're FIRED. Your coffee is cold now anyway.",
+                            stats: {},
+                            gameOver: true,
+                            gameOverReason: "The Inbox Won"
+                        }
+                    ]
+                },
+                {
+                    id: 2,
+                    chapter: 1,
+                    title: "⚡ The Quick Favor",
+                    time: "8:47 AM",
+                    icon: "🤝⚡",
+                    description: "You survived the inbox apocalypse! *confetti* ...Wait, no. Head of Sales just slid into your DMs. 🫠<br><br>Her message: 'Hey bestie! Quick favor! Hire my nephew? He's GREAT. Trust me. Also I need this processed by noon.' 😬<br><br>*internal screaming*",
+                    dialogues: [
+                        {
+                            speaker: "💅 Head of Sales",
+                            text: "Look, he's got SO much potential, okay? He might've gotten fired from his last 3 jobs but THAT'S not his fault! The companies were 'toxic.' 😤 *hair flip*"
+                        },
+                        {
+                            speaker: "💅 Head of Sales",
+                            text: "Also... I'd really appreciate it if this stayed between us. You know how The Boss gets about... *wink* internal politics. 🤫"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "📋 Process the hire NOW — she's Head of SALES, she brings in the BIG money!",
+                            result: "The nephew shows up late on his first day, makes inappropriate comments, and somehow YOU become the office villain. Meanwhile, Head of Sales got that promotion she wanted. Thanks, Head of Sales. 🙃",
+                            stats: { sanity: -15, patience: -10 }
+                        },
+                        {
+                            letter: "B",
+                            text: "📝 Tell her you'll 'consider it' — stall tactics activated!",
+                            result: "She sees through your stall tactics INSTANTLY. Your inbox gets CC'd to The Boss. Twice. You're now her enemy. *dramatic music* The office is divided into 'Team Sales' and 'Team HR?' Nobody's joining Team HR. 😔",
+                            stats: { boss: -20, patience: -15 }
+                        },
+                        {
+                            letter: "C",
+                            text: "🔍 Promise to review his CV — you'll follow 'proper procedure'",
+                            result: "His CV is... creative. 'Entrepreneur' for 'unemployed.' 'Life coach' for 'unemployed.' You professionally ghost her. She pretends it never happened. *chef's kiss* 👌",
+                            stats: { patience: 10, sanity: 10 }
+                        },
+                        {
+                            letter: "D",
+                            text: "⚖️ Explain policy — nepotism is a lawsuit waiting to happen",
+                            result: "You send a professional, well-worded explanation of why this is problematic. She goes SILENT. Three hours later, The Boss calls. You've 'lost the trust of a key stakeholder.' *facepalm* But technically, you did nothing wrong. 💪",
+                            stats: { sanity: 5, boss: -15 }
+                        }
+                    ]
+                },
+                {
+                    id: 3,
+                    chapter: 1,
+                    title: "💸 The Salary Leak",
+                    time: "9:30 AM",
+                    icon: "🔓💰",
+                    description: "*DOOR CRASH* 😱<br><br>Finance Officer bursts through your door like she just escaped prison. Her eyes are WILD. Her hands are clutching a screenshot like it's a nuclear launch code.<br><br>*gasp* Your heart stops. You know that look. That's the look of someone who's about to create a hostile work environment for EVERYONE. 😰",
+                    dialogues: [
+                        {
+                            speaker: "😱 Finance Officer",
+                            text: "*points at phone with trembling finger* Senior Analyst is making TWICE what I make?! TWICE!! We've been here the SAME amount of time! I TRAINED him!!!"
+                        },
+                        {
+                            speaker: "😤 Finance Officer",
+                            text: "This is DISCRIMINATION! I'm going to HR! *pause* ...which is YOU! *sits down aggressively* Fix this NOW or I QUIT!"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "🏃 Get Senior Analyst in here IMMEDIATELY — confrontation time!",
+                            result: "Senior Analyst reveals he's actually applying for a job in Dubai next week. Salary leak was his 'negotiation tactic.' 🤡 He QUITS on the spot. Now you have TWO unhappy employees and The Boss asking why you created a scene. 🫠",
+                            stats: { sanity: -25, patience: -15 }
+                        },
+                        {
+                            letter: "B",
+                            text: "💆 Play therapist — let her vent, validate her feelings",
+                            result: "After 47 minutes, Finance Officer feels 'heard.' She's calmer. But guess who just missed THREE meetings? Your inbox has 12 angry emails. The Boss wants to 'discuss your priorities.' 🫥",
+                            stats: { patience: -20, boss: -10 }
+                        },
+                        {
+                            letter: "C",
+                            text: "📊 Dig into the data — find out WHY the pay gap exists",
+                            result: "*detective mode activated* 🕵️ You discover Senior Analyst has a specialized certification that warrants the pay difference. You show Finance Officer. She's still mad... but she gets it. She asks for a raise instead. Professional escalation. 💅",
+                            stats: { sanity: 15, patience: 10 }
+                        },
+                        {
+                            letter: "D",
+                            text: "😶 Stay neutral — 'I can't discuss other employees' salaries'",
+                            result: "Finance Officer stares at you. *long silence* 'So... you can't help me?' She files a formal complaint about... you guessed it... unequal pay. MOHRE is now involved. 🎉",
+                            stats: { boss: -10, patience: -5 }
+                        }
+                    ]
+                },
+                {
+                    id: 4,
+                    chapter: 1,
+                    title: "😤 The Office Romance Drama",
+                    time: "10:15 AM",
+                    icon: "💕📢",
+                    description: "*RING RING* Your desk phone explodes with sound.<br><br>A panicked voice: 'There's DRAMA in the break room! Someone's crying! Someone else is yelling!'<br><br>You arrive to find Junior Staff and Senior Analyst from different departments in a STANDOFF. 🥷 The whole office is WATCHING. You can feel the drama like electricity in the air. ⚡",
+                    dialogues: [
+                        {
+                            speaker: "💔 Junior Staff",
+                            text: "He PROMISED me a relationship! I gave him my SOUL! And now he wants to 'just be friends'?! 😤 *tears streaming*"
+                        },
+                        {
+                            speaker: "🤷 Senior Analyst",
+                            text: "I never said that! I said I was 'emotionally unavailable!' There's a DIFFERENT! *defensive arms crossed*"
+                        },
+                        {
+                            speaker: "👀 Entire Office",
+                            text: "*whispering intensifies* 👀👀👀"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "📢 'EVERYONE BACK TO WORK!' — assert dominance",
+                            result: "*BOOM* Your voice echoes through the building. 👑 Everyone scatters. But the drama goes UNDERGROUND. Anonymous messages start flying. HR becomes the office villain. You hear whispers: 'HR doesn't CARE about employee happiness.' 😔",
+                            stats: { patience: 10, boss: 5 }
+                        },
+                        {
+                            letter: "B",
+                            text: "🚪 'Let's take this to a private room' — mediate like a pro",
+                            result: "45 minutes of awkward mediation later... they agree to 'a cooling-off period.' The office gossip mill goes WILD with theories. But hey, at least no formal complaint. 🤷",
+                            stats: { patience: -10, sanity: -10 }
+                        },
+                        {
+                            letter: "C",
+                            text: "📋 Document EVERYTHING — HR protocol activated",
+                            result: "You pull out the official forms. Both parties freeze. 'Is this... serious?' You explain policy with a deadpan face. The 'relationship' mysteriously resolves itself. Management loves your thoroughness. 💼",
+                            stats: { boss: 15, patience: 5 }
+                        },
+                        {
+                            letter: "D",
+                            text: "🤷 Walk away — you didn't sign up for this",
+                            result: "You turn around. Everyone stares. 'HR's giving up?!' The rumor mill goes OVERDRIVE. Your efficiency rating drops. Junior Staff and Senior Analyst somehow BOTH blame you now. They form an alliance. Against you. 😱",
+                            stats: { boss: -20, sanity: -15 }
+                        }
+                    ]
+                },
+                {
+                    id: 5,
+                    chapter: 1,
+                    title: "😱 The Reference Check Nightmare",
+                    time: "11:00 AM",
+                    icon: "📞😱",
+                    description: "*sigh* You finally sit down for your first sip of coffee. COLD coffee. Because of COURSE it's cold. ☕<br><br>HR Admin (the one who 'helps' but mostly makes copies): 'Hey! Quick question about the reference check for—' 👀<br><br>You look at the name on her screen. James Chen. The guy you FIRED last month for 'creative timekeeping.' 😰",
+                    dialogues: [
+                        {
+                            speaker: "📋 HR Admin",
+                            text: "So... what should I say if they ask about his 'attendance issues'? 🤔"
+                        },
+                        {
+                            speaker: "📋 HR Admin",
+                            text: "Also, he wants you to be a 'professional reference' even though you literally fired him. He says: 'She'll say good things. Trust me.' 🤨"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "🗣️ Tell the TRUTH — 'attendance issues' was an understatement",
+                            result: "You give the REAL reference. 'He was consistently late. Like, ACTUALLY consistently. Every. Single. Day. 9:15 means 9:45 in James time.' The new company is GRATEFUL. James... is not. He posts a scathing review about 'toxic HR' on LinkedIn. 3 likes. One from his mom. 😬",
+                            stats: { sanity: 10, boss: -5 }
+                        },
+                        {
+                            letter: "B",
+                            text: "🤐 'Just say the standard: reemployed before, good standing'",
+                            result: "The new company hires him. Three months later, they call you in a PANIC. He's been 'adjusting' his timesheets AGAIN. They want to sue. You want to QUIT. This is fine. Everything is FINE. 🫠",
+                            stats: { boss: 10, sanity: -15 }
+                        },
+                        {
+                            letter: "C",
+                            text: "📧 Tell them to CALL you — you'll handle it personally",
+                            result: "You get on the call. You explain. Professionally. Calmly. With just the RIGHT amount of 'this is a red flag' energy. 🎯 The company DECLINES to hire him. They send you a THANK YOU fruit basket. You've made an ally. 🍎",
+                            stats: { boss: 15, sanity: 15 }
+                        },
+                        {
+                            letter: "D",
+                            text: "🧘 'I don't remember this person' — classic HR amnesia",
+                            result: "You... pretend you don't remember. HR Admin looks at you. 'But... you signed the termination papers?' You stare at her. She stares at you. *long awkward silence* 🫥<br><br>They hire him. He shows up to the new job. He recognizes his new boss from your old company. Comedy gold. 🎭",
+                            stats: { patience: -15, boss: -20 }
+                        }
+                    ]
+                },
+                {
+                    id: 6,
+                    chapter: 1,
+                    title: "🛋️ The Comfy Chair Catastrophe",
+                    time: "11:47 AM",
+                    icon: "🪑💥",
+                    description: "You've survived until almost NOON! *confetti* Your coffee is finally HOT. You're ALIVE. You're THRIVING. 💪<br><br>Then... *KNOCK KNOCK*<br><br>Department Head is at your door. His expression is... unreadable. 😶<br><br>'We need to discuss the new office chairs. Budget. Quality. Chair things.' 🪑",
+                    dialogues: [
+                        {
+                            speaker: "👔 Department Head",
+                            text: "I want the BEST chairs. The most COMFORTABLE chairs. My team deserves LUXURY. 💺✨"
+                        },
+                        {
+                            speaker: "👔 Department Head",
+                            text: "Also, we're on a BUDGET. So... cheap luxury? Make it happen. 🤌"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "💰 Buy the CHEAPEST ones — budget is king!",
+                            result: "The chairs arrive. They look... functional. 👀<br><br>They are NOT functional. Within a week, 4 employees have back problems. One files for WORKMAN'S COMP. The medical bill: AED 80,000. The chairs: AED 2,000. You do the math. 📊💀",
+                            stats: { boss: -30, sanity: -20 }
+                        },
+                        {
+                            letter: "B",
+                            text: "👑 Buy the EXPENSIVE ones — quality NEVER compromises",
+                            result: "The chairs arrive. They're MAGNIFICENT. Italian leather. Lumbar support. Massagers built in. 🪑👑<br><br>Department Head's team loves them. The Boss sees them. 'Why don't WE have these?' *points at everyone else* 😤 The Boss gets a chair. So does The Boss's assistant. So does... everyone. Budget? WHAT budget. 💸",
+                            stats: { boss: 20, patience: -10 }
+                        },
+                        {
+                            letter: "C",
+                            text: "⚖️ Split the difference — some good, some great",
+                            result: "You buy a VARIETY. Some nice, some basic, some... questionable. 🪑🪑🪑<br><br>Office becomes a MENGER GARDEN of CHAIRS. People FIGHT over the good ones. Someone draws a SEAT MAP. There are TICKET SYSTEMS. You have become a chair overlord. But... nobody's back hurts? 📋✅",
+                            stats: { patience: 15, boss: 5 }
+                        },
+                        {
+                            letter: "D",
+                            text: "🧘 Buy NOTHING — 'comfort is a mindset'",
+                            result: "You decide: WHO NEEDS CHAIRS? Not you! Not YOUR employees! Standing desks! Yoga balls! GROUND-LING! 🧘‍♀️<br><br>Three people quit within a month. 'HR is trying to DESTROY our spines!' one yells. The Boss calls. You explain. He does NOT laugh. 📞😰",
+                            stats: { boss: -25, patience: -25 }
+                        }
+                    ]
+                },
+                // ========== CHAPTER 2: AFTERNOON HELL ==========
+                {
+                    id: 7,
+                    chapter: 2,
+                    title: "🍕 The Lunch Ambush",
+                    time: "1:15 PM",
+                    icon: "🍕⚡",
+                    description: "*CRUNCH* You're eating your sad desk lunch. A salad. Because you're HEALTHY. 💪<br><br>Then... *DOOR SLAM*<br><br>Team Member A appears with DECADENT pizza. 🍕 She's SLIDING it across your desk like a cocktail waiter.<br><br>'Join us for team lunch! We're ORDERING MORE. You're invited. MUST come.' 😬",
+                    dialogues: [
+                        {
+                            speaker: "💬 Team Member A",
+                            text: "Also, we're talking about WORK. And by 'work,' I mean 'Derek's management skills.' And by 'Derek's management skills,' I mean... *leans in* ...he's TERRIBLE. 👀"
+                        },
+                        {
+                            speaker: "💬 Team Member A",
+                            text: "You should totally join. Hear things. See things. Be IN the loop. 🤫 *winks aggressively*"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "🍕 Accept the pizza — free food is free food!",
+                            result: "You eat the pizza. It's DELICIOUS. 🍕✨<br><br>But now you're 'in the loop.' Which means you're liable for EVERYTHING said. Office gossip becomes YOUR gossip. Team Member A is your new 'best friend.' She texts you at 2 AM about 'Derek issues.' 😰",
+                            stats: { sanity: -10, patience: -15 }
+                        },
+                        {
+                            letter: "B",
+                            text: "🤝 'I appreciate it, but I need to stay professional'",
+                            result: "Team Member A's smile FAILS. 'Fine. Be that way.' She takes her pizza ELSEWHERE. 😐<br><br>The gossip gets WORSE without your 'professional influence.' Derek finds out about the 'Derek hate club.' He asks YOU why people hate him. You don't know. But now you're in the middle. 🎯",
+                            stats: { boss: 10, patience: -10 }
+                        },
+                        {
+                            letter: "C",
+                            text: "🎭 Accept AND engage — gather INTEL like a spy",
+                            result: "You eat. You smile. You NOD. 'Tell me MORE.' 👀<br><br>Information FLOODS in. Derek IS terrible. His team is MISERABLE. You now have LEVERAGE. And pizza. 🍕🎯<br><br>Use it wisely. Or don't. Pizza's gone anyway.",
+                            stats: { sanity: -5, boss: 15 }
+                        },
+                        {
+                            letter: "D",
+                            text: "📧 Forward the invite to Derek — 'thought you should know'",
+                            result: "You screenshot. You FORWARD. You ADD: 'Thought you should be aware.' 📱💥<br><br>Derek sees the message. Team Member A sees Derek seeing the message. The office goes SILENT. 💀<br><br>Derek storms out. Team Member A storms in. YOU are now the VILLAIN. *slow clap* 👏",
+                            stats: { boss: -20, patience: -20 }
+                        }
+                    ]
+                },
+                {
+                    id: 8,
+                    chapter: 2,
+                    title: "📊 The Performance Review Trap",
+                    time: "2:30 PM",
+                    icon: "📈😱",
+                    description: "*KNOCK KNOCK*<br><br>Expecting Staff enters. She's 8 months pregnant. Her aura is... GLOWING. ✨👶<br><br>'I need to discuss my performance review. I got a 'needs improvement.' I think it's DISCRIMINATION.' I'm pregnant<br><br>*record scratch* Her review WASN'T great. But timing is... suspicious. 🤔",
+                    dialogues: [
+                        {
+                            speaker: "💬 Expecting Staff",
+                            text: "I know my performance has... *gestures at belly* ...limitations right now. But I'm PROTECTED. LEGALLY. 👨‍⚖️"
+                        },
+                        {
+                            speaker: "💬 Expecting Staff",
+                            text: "Also, my manager gave everyone else GOOD reviews. Except me. And two other pregnant employees. 👀 Coincidence? I think NOT."
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "👔 Overturn the review — legal risk is too high",
+                            result: "You change it. 'Needs improvement' becomes 'meets expectations.' 📈<br><br>Her manager is FURIOUS. 'This undermines my AUTHORITY!' Now you have a hostile manager AND a pregnant employee. The Boss asks why you're 'coddling' people. 📞😰",
+                            stats: { boss: -10, patience: -15 }
+                        },
+                        {
+                            letter: "B",
+                            text: "🔍 Investigate properly — compare ALL reviews fairly",
+                            result: "*detective mode* 🕵️ You find the reviews were... inconsistent. Some 'needs improvement' were actually 'exceeds.' Manager played FAVORITES.<br><br>You fix the system. Expecting Staff gets her review fixed. Manager gets... a talk. Fairness achieved. ⚖️",
+                            stats: { boss: 5, patience: 10, sanity: 10 }
+                        },
+                        {
+                            letter: "C",
+                            text: "😶 'This is above my pay grade' — kick it upstairs",
+                            result: "You forward to Legal. Legal forward to HR Head. HR Head forward to... nobody knows. 📭<br><br>Expecting Staff waits. And waits. And waits. Baby arrives before resolution. 👶🎉<br><br>You get a passive-aggressive email: 'Following up on my complaint.' Reply: '...' 🫥",
+                            stats: { boss: -5, patience: -20 }
+                        },
+                        {
+                            letter: "D",
+                            text: "💬 Side with the manager — 'objectivity must be maintained'",
+                            result: "You support the review. 'Standards must be MET.' 📊<br><br>Expecting Staff goes SILENT. Two days later, MOHRE calls. She's filed a complaint. Official one. 📞⚖️<br><br>Legal cost: AED 200,000. Your dignity: priceless? No. Your dignity: also gone. 💀",
+                            stats: { boss: -15, patience: -25 }
+                        }
+                    ]
+                },
+                {
+                    id: 9,
+                    chapter: 2,
+                    title: "🛡️ The Leave Policy War",
+                    time: "3:15 PM",
+                    icon: "📜⚔️",
+                    description: "You enter the conference room. Team Lead is already seated. His arms are CROSSED. 😤<br><br>'We need to discuss leave approvals. My team needs MORE leave. The current policy is... *dramatic pause* ...NOT ACCOMMODATING.' 👔<br><br>His team has taken 47 days already. It's March. 📅",
+                    dialogues: [
+                        {
+                            speaker: "👔 Team Lead",
+                            text: "My team is EXHAUSTED. They need MANDATORY vacation. I'm ORDERING them to take leave. You're HR. Make it HAPPEN. 🤨"
+                        },
+                        {
+                            speaker: "👔 Team Lead",
+                            text: "Also, if you say 'check the policy,' I will... *leans forward* ...be VERY disappointed. 😤"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "✅ Approve it all — 'my way or the highway' doesn't work here",
+                            result: "You approve. EVERYONE gets leave. Team Lead is THRILLED. 👏<br><br>Operations CRASHES. 3 projects deadline MISSED. The Boss calls. 'Why is NOBODY working?!' You explain. He does NOT understand the concept of 'work-life balance.' 📞💀",
+                            stats: { boss: -25, patience: -20 }
+                        },
+                        {
+                            letter: "B",
+                            text: "📋 Enforce the policy — rules are rules, buddy",
+                            result: "You show Team Lead the policy. His face turns RED. 🔴<br><br>'You HR people!' He storms out. Files a COMPLAINT about you. 'Not a team player.' The Boss agrees. 'Why can't you just WORK with people?' 📞😰<br><br>You are now the office villain. Again. Villainy is EXHAUSTING. 😔",
+                            stats: { boss: -20, patience: -10 }
+                        },
+                        {
+                            letter: "C",
+                            text: "🤝 Negotiate — 'let's find middle ground'",
+                            result: "You create a ROTATION. Some leave now, some later. Team Lead HATES it. But he accepts.<br><br>Operations CONTINUES. Projects COMPLETE. Team Lead's team gets their rest. You're called 'reasonable.' Is that a COMPLIMENT? You're not sure. 🤷",
+                            stats: { boss: 15, patience: 15 }
+                        },
+                        {
+                            letter: "D",
+                            text: "👑 Escalate to The Boss — 'this is above my pay grade'",
+                            result: "You escalate. The Boss listens to BOTH sides. 👑<br><br>Then he says: 'Figure it out.' And leaves. 🚪<br><br>Team Lead stares at you. You stare at Team Lead. 'Figure it out,' he mimics. *sigh* 🫠<br><br>You figure it out. Nobody's happy. But the office is running. Barely. 📉",
+                            stats: { boss: -5, patience: 5 }
+                        }
+                    ]
+                },
+                {
+                    id: 10,
+                    chapter: 2,
+                    title: "📧 The Email Accusation",
+                    time: "4:00 PM",
+                    icon: "📧💣",
+                    description: "*DING*<br><br>A new email. FROM: anonymous@company.com. SUBJECT: 'HR IS CORRUPT.' 💣<br><br>You open it. It's... an essay. About how you're 'favoring certain employees.' 'Taking bribes.' 'Having affairs with managers.' 😱<br><br>...Wait. What affairs?! YOU DON'T EVEN HAVE TIME FOR LUNCH!",
+                    dialogues: [
+                        {
+                            speaker: "📧 Anonymous Email",
+                            text: "HR plays FAVORITES. Only certain employees get promoted. It's OBVIOUS. This company is TOXIC. You're the WORST HR ever. 😤"
+                        },
+                        {
+                            speaker: "📧 Anonymous Email",
+                            text: "P.S. The manager having an affair is OBVIOUS. Everyone knows. Except HR apparently. *eyeroll* 🤦"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "📡 Trace the email — Sherlock mode ACTIVATED",
+                            result: "*typing intensifies* 🕵️ You trace the IP. It's... from INSIDE the company. Of course it is.<br><br>You narrow it down. IT department helps. The email came from... Conference Room B. The ONLY person who had access? Team Member A. 👀<br><br>Turns out: Team Member A was salty about a denied leave request. The 'affair' rumor? Total fiction. You fire her. Metaphorically. She cries. Nobody's happy. 📧😢",
+                            stats: { boss: 10, sanity: -15 }
+                        },
+                        {
+                            letter: "B",
+                            text: "📢 Address it publicly — 'this is UNACCEPTABLE'",
+                            result: "You reply ALL. 'This email is UNDER INVESTIGATION. False accusations will be addressed.' 📧<br><br>Office goes CRAZY. Everyone wants to KNOW. Who sent it? Who's the manager with the AFFAIR?! 👀<br><br>Drama INTENSIFIES. HR is now the CENTER of office gossip. Forever. You did this. This is YOUR legacy. 🫠",
+                            stats: { boss: -15, patience: -25 }
+                        },
+                        {
+                            letter: "C",
+                            text: "🤐 Ignore it — 'this too shall pass'",
+                            result: "You delete the email. You MOVE ON. Namaste. 🧘‍♀️<br><br>The rumors SPREAD. 'HR is CORRUPT!' 'HR is INCOMPETENT!' 'HR is HAVING AN AFFAIR!' The last one is about YOU. With NOBODY SPECIFIC. Just... vibes. 😰<br><br>Your reputation: RUINED. Your lunch: cold. Again. ☕💀",
+                            stats: { boss: -20, sanity: -20 }
+                        },
+                        {
+                            letter: "D",
+                            text: "👔 Take it to The Boss — 'we need to address this TOGETHER'",
+                            result: "You meet with The Boss. Show him the email. He's FURIOUS. 'Find the SOURCE!' 🗣️<br><br>You investigate TOGETHER. The Boss's involvement makes everyone NERVOUS. Someone confesses: Staff Member X. He was mad about a warning letter.<br><br>You handle it. Quietly. Professionally. The Boss respects your discretion. 👑",
+                            stats: { boss: 20, patience: 10 }
+                        }
+                    ]
+                },
+                {
+                    id: 11,
+                    chapter: 2,
+                    title: "🎭 The Probationary Paradox",
+                    time: "4:45 PM",
+                    icon: "⏰😰",
+                    description: "The Boss's assistant texts you. EMERGENCY. The Boss wants to see you. NOW. 📱💀<br><br>You enter his office. He's staring at his computer. Not at you. The vibe is... INTENSE. 👑<br><br>'We hired someone last month. Terrible hire. I want them GONE. Today.' 😤",
+                    dialogues: [
+                        {
+                            speaker: "👑 The Boss",
+                            text: "They're in their PROBATION period. Fire them. Simple. I'm the CEO. I say who's in, I say who's OUT. 😤"
+                        },
+                        {
+                            speaker: "👑 The Boss",
+                            text: "'But check with Legal first,' he says, dripping with SARCASM. 'We don't want to get SUED.' *eye roll* 😒"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "👔 'Your wish is my command!' — fire them immediately",
+                            result: "You fire them. NO paperwork. NO documentation. Clean break. ✂️<br><br>One week later: lawsuit. 'Wrongful termination during probation.' They have EMAILS. Of you saying 'The Boss wants them gone.' 📧⚖️<br><br>Legal fees: AED 150,000. Your job security: questionable. Your choices: limited. 🫠",
+                            stats: { boss: 15, sanity: -20 }
+                        },
+                        {
+                            letter: "B",
+                            text: "📋 Follow the process — document, document, document",
+                            result: "You create a PERFORMANCE IMPROVEMENT PLAN. 📊<br><br>The Boss is FURIOUS. 'I said FIRE THEM!' You explain. Legal consequences. Risk assessment. He doesn't care. 📞💀<br><br>But... 30 days later? The employee IMPROVES. The Boss is surprised. 'Okay. Maybe you know SOMETHING.' 👑",
+                            stats: { boss: -10, patience: 20 }
+                        },
+                        {
+                            letter: "C",
+                            text: "🤝 'Let's give them a second chance with CLEAR expectations'",
+                            result: "You negotiate. PROBATION EXTENSION. One more month. Clear goals. Documented progress. 📋✅<br><br>The Boss reluctantly agrees. The employee tries HARDER. They... actually improve. 🎉<br><br>The Boss is... impressed? 'Fine. You were RIGHT.' High praise from The Boss. Frame this moment. 🖼️👑",
+                            stats: { boss: 20, patience: 15 }
+                        },
+                        {
+                            letter: "D",
+                            text: "💼 'Let's be honest — the hiring process needs improvement'",
+                            result: "You redirect. The problem isn't THIS employee. It's the HIRING. 🎯<br><br>You propose: better interviews, trial projects, structured onboarding. The Boss LISTENS. Mostly because he's tired of this conversation. 🗣️<br><br>New hiring policy: IMPLEMENTED. This employee stays. Future hires: BETTER. You're a prophet. And an HR person. Prophet-HR. 🔮",
+                            stats: { boss: 25, sanity: 15 }
+                        }
+                    ]
+                },
+                {
+                    id: 12,
+                    chapter: 2,
+                    title: "💰 The Bonus Battle Royale",
+                    time: "5:30 PM",
+                    icon: "💵⚔️",
+                    description: "*EXPLOSION* 💥<br><br>Finance Officer is at your desk AGAIN. Her eyes are WILD. Paper in hand.<br><br>'BONUSES. ARE. OUT.' 📊💰<br><br>She shows you the numbers. Her bonus: AED 5,000. Senior Analyst: AED 25,000. AGAIN.<br><br>'EXPLAIN. THIS. NOW.' 😤",
+                    dialogues: [
+                        {
+                            speaker: "💰 Finance Officer",
+                            text: "Again! This is the THIRD YEAR! He gets MORE because he 'closes deals!' But I DO THE NUMBERS! Without me, what would he CLOSE?!"
+                        },
+                        {
+                            speaker: "💰 Finance Officer",
+                            text: "And before you say 'talk to your manager' — I DID. He said 'that's just how it is.' *mic drop* 🎤⬇️"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "💸 Review the ENTIRE bonus structure — it's time for equality",
+                            result: "You audit EVERYTHING. The bonus structure is... UNSTRUCTURED. Chaos. Random. 📊❌<br><br>You propose a CLEAR formula. Experience + Performance + Department Value. It's FAIR. Finance Officer approves. Senior Analyst complains.<br><br>You mediate. Eventually, both accept. You're now the office EQUILIZER. ⚖️",
+                            stats: { sanity: 15, boss: 15 }
+                        },
+                        {
+                            letter: "B",
+                            text: "🤐 'Bonuses are confidential — I literally can't discuss this'",
+                            result: "Finance Officer stares. 'So... you're useless?' 😐<br><br>She files a FORMAL complaint. About YOU. About BONUS SECRECY. About 'systemic inequality.' 📝💀<br><br>Legal gets involved. HR (you) looks INEPT. The Boss asks: 'Can't you just... handle things?' 📞🫥",
+                            stats: { boss: -30, patience: -25 }
+                        },
+                        {
+                            letter: "C",
+                            text: "🔍 'Let me investigate why there's a disparity'",
+                            result: "*detective mode* 🕵️ You find: Senior Analyst's 'deals' include ones Finance Officer SET UP. He's taking CREDIT. 🕵️‍♀️<br><br>You fix it. Retroactively adjust bonuses. Finance Officer gets her FAIR share. Senior Analyst gets... a warning. 📋✅<br><br>Finance Officer sends you FLOWERS. 🌸 Senior Analyst sends you... silence. Which is fine. Silence is GOLD. 🤫",
+                            stats: { boss: 10, patience: 20 }
+                        },
+                        {
+                            letter: "D",
+                            text: "👔 'Talk to The Boss about restructuring bonuses'",
+                            result: "You escalate. The Boss LISTENS. Then he says: 'Bonuses are PERFORMANCE-based. That's FINAL.' 📊👑<br><br>Finance Officer finds out YOU escalated. She's MAD at YOU. 'You were supposed to FIX it!' Senior Analyst laughs. You... exist in the middle. 🫠<br><br>Nobody's happy. Welcome to HR. 🌈💀",
+                            stats: { boss: -10, patience: -15 }
+                        }
+                    ]
+                },
+                // ========== CHAPTER 3: EVENING CRISIS ==========
+                {
+                    id: 13,
+                    chapter: 3,
+                    title: "🌙 The Late Night Emergency",
+                    time: "7:45 PM",
+                    icon: "🌙⚡",
+                    description: "You're packing up. It's 7:45 PM. You've been here for almost 12 HOURS. Your soul is leaving your body. 👻<br><br>*RING RING* 📞<br><br>Staff Member X. His voice is PANICKED. 'I NEED to leave the country TOMORROW. Family emergency. But I just joined 3 MONTHS AGO. Leave is... NOT approved.' 😱",
+                    dialogues: [
+                        {
+                            speaker: "💬 Staff Member X",
+                            text: "My mom is SICK. Really sick. I need to GO. But my manager says NO because 'project deadlines.' 😰"
+                        },
+                        {
+                            speaker: "💬 Staff Member X",
+                            text: "I know I don't have leave. I KNOW. But... please? There has to be something? 🙏"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "✈️ 'Go. Now. I'll handle the paperwork' — humanity wins",
+                            result: "You approve the leave. UNOFFICIALLY. Emergency leave. Staff Member X is GONE. 🛫<br><br>His manager is FURIOUS. 'UNDERSCHEDULED LEAVE!' You explain. He doesn't listen. The Boss gets involved. 'Why wasn't this PLANNED?!' 📞😤<br><br>Staff Member X's mom... she makes it. He sends you a photo. She's SMILING. Worth it. 🌸👨‍👩‍👧",
+                            stats: { patience: 20, boss: -15 }
+                        },
+                        {
+                            letter: "B",
+                            text: "📋 'Let me check policy — there might be an exception'",
+                            result: "You dig through the HANDBOOK. Page 47. 'Emergency leave for immediate family: CASE BY CASE.' 📖✅<br><br>You APPROVE it. With conditions. His manager complains. You mediate. Staff Member X goes. Comes back. With SOUVENIRS. For you. It's weird. But sweet? 🎁",
+                            stats: { patience: 15, boss: 5 }
+                        },
+                        {
+                            letter: "C",
+                            text: "⚖️ 'Policy is clear — you need advance approval'",
+                            result: "You say NO. Policy is POLICY. 📋❌<br><br>Staff Member X goes ANYWAY. He quits on the SPOT. Texts you from the AIRPORT. 'Thanks for NOTHING.' ✈️😢<br><br>His manager celebrates. You... don't. Was policy the RIGHT call? You'll wonder forever. 🌀",
+                            stats: { boss: 10, patience: -20 }
+                        },
+                        {
+                            letter: "D",
+                            text: "🤝 'Let's negotiate — some work, some emergency leave'",
+                            result: "You propose: 3 days emergency, 2 days from annual leave, remote work for 2 weeks. A COMPROMISE. 🤝<br><br>Everyone AGREES. Staff Member X goes. His mom recovers. His manager doesn't explode. The Boss is... neutral? That's a WIN. 🏆",
+                            stats: { boss: 15, patience: 15, sanity: 10 }
+                        }
+                    ]
+                },
+                {
+                    id: 14,
+                    chapter: 3,
+                    title: "👔 The Promotion Pandemonium",
+                    time: "8:30 PM",
+                    icon: "📈😤",
+                    description: "You're STILL at work. The sun has SET. You're basically a VAMPIRE now. 🧛<br><br>Department Head enters. His face is... DETERMINED. 😤<br><br>'I need TWO promotions approved. By END OF WEEK. My team is LEAVING if they don't get promoted.' 📈",
+                    dialogues: [
+                        {
+                            speaker: "👔 Department Head",
+                            text: "Senior Analyst deserves Senior Manager. Team Member A deserves Team Lead. I PROMISED them. 💼"
+                        },
+                        {
+                            speaker: "👔 Department Head",
+                            text: "'We don't have openings,' you say? Make OPENINGS. That's what HR DOES. 🤨"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "👑 Approve both — 'keep the peace at all costs'",
+                            result: "You approve. PROMOTIONS. Everyone's HAPPY. 🎉<br><br>Three problems: 1) No actual promotion criteria existed. 2) Other teams are FURIOUS. 3) You just created a pyramid scheme of mediocrity. 📊💀<br><br>The Boss asks: 'Why are OTHER managers complaining?' You... don't have an answer. 🫥",
+                            stats: { boss: -20, patience: -15 }
+                        },
+                        {
+                            letter: "B",
+                            text: "📊 'Let's review performance metrics objectively'",
+                            result: "You create a TRANSPARENT system. Performance reviews. 360 feedback. Goals achieved. 📊✅<br><br>Senior Analyst scores HIGH. Team Member A... does not. Department Head is FURIOUS. But FAIRNESS prevails. 🏆<br><br>Other teams RESPECT you. That's... new. And nice. 👑",
+                            stats: { boss: 15, patience: 20 }
+                        },
+                        {
+                            letter: "C",
+                            text: "🔄 Promote one, delay one — split the difference",
+                            result: "You compromise. Senior Analyst gets promoted (they EARNED it). Team Member A waits 3 more months (she AGREES to the plan). 📋<br><br>Department Head is... okay with this. Team Member A is okay with this. You... are EXHAUSTED. But functional. 🫠",
+                            stats: { boss: 10, patience: 10 }
+                        },
+                        {
+                            letter: "D",
+                            text: "💼 'Promotions need BUDGET approval — talk to The Boss'",
+                            result: "You send Department Head to The Boss. POLITELY. 👔💼<br><br>The Boss says: 'HR handles promotions.' You say: 'HR needs BUDGET.' This goes in CIRCLES. 🔄<br><br>Nobody gets promoted. Nobody's happy. But nobody's MAD at YOU. Is that a WIN? Debatable. ⚖️",
+                            stats: { boss: -10, patience: 5 }
+                        }
+                    ]
+                },
+                {
+                    id: 15,
+                    chapter: 3,
+                    title: "⚖️ The HR Compliance Audit",
+                    time: "9:15 PM",
+                    icon: "📋😰",
+                    description: "*EMAIL BOMB* 💣💣💣<br><br>MOHRE is coming. An AUDIT. In TWO WEEKS. 📅<br><br>You've been... 'managing' things. Not DOCUMENTING things. Because who has TIME to document?! YOU DON'T. YOU'RE HR. 😰<br><br>But MOHRE wants RECORDS. PROOF. EVIDENCE. 📋",
+                    dialogues: [
+                        {
+                            speaker: "📋 Legal Team",
+                            text: "We've reviewed your HR practices. They're... *long pause* ...concerning. 🔍"
+                        },
+                        {
+                            speaker: "📋 Legal Team",
+                            text: "Employee records? Incomplete. Contracts? SOME unsigned. Disciplinary actions? NOT documented. Basically, you're one complaint away from a LAWSUIT. ⚖️"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "🕯️ All-nighter — 'I'll document EVERYTHING tonight!'",
+                            result: "You STAY. All night. ☕🌙<br><br>You document. You FIX. You CREATE paper trails from NOTHING. It's MAGIC. And exhausting. ✨😵<br><br>Audit day arrives. You're TIRED. But prepared. MOHRE sees... something. Not perfect. But salvageable. 📋✅",
+                            stats: { sanity: -25, boss: 10 }
+                        },
+                        {
+                            letter: "B",
+                            text: "📢 'We need to disclose issues BEFORE the audit'",
+                            result: "You TELL The Boss. He FREAKS. 'We can't ADMIT anything!' You explain: PROACTIVE disclosure = less fines. REACTIVE = bigger fines. 📊💰<br><br>He listens. You disclose. Some issues. MOHRE appreciates HONESTY. Fine: AED 20,000. Could've been 200,000. 📉",
+                            stats: { boss: 5, patience: 15 }
+                        },
+                        {
+                            letter: "C",
+                            text: "🧹 'Hide everything questionable' — out of sight, out of mind",
+                            result: "You... hide. 📦<br><br>Audit day. MOHRE asks for SPECIFIC documents. You say they're 'being organized.' They don't believe you. 🔍❌<br><br>AUDIT FAIL. Fine: AED 400,000. You get a 'formal warning.' The Boss asks: 'What happened?' You say: 'Accountability.' He says: 'What's that?' 💀",
+                            stats: { boss: -30, sanity: -30 }
+                        },
+                        {
+                            letter: "D",
+                            text: "🤝 'Partner with Legal to fix this PROPERLY'",
+                            result: "You call Legal. TOGETHER, you create a PLAN. 📋🤝<br><br>Immediate fixes: sign contracts, document issues, create policies. Two weeks of WORK. But it's DONE. Properly. 📋✅<br><br>Audit day: SUCCESS. MOHRE gives you... a COMPLIMENT? 'Good improvement.' You frame it. 🖼️🏆",
+                            stats: { boss: 20, patience: 10, sanity: 15 }
+                        }
+                    ]
+                },
+                {
+                    id: 16,
+                    chapter: 3,
+                    title: "💼 The Exit Interview Explosion",
+                    time: "10:00 PM",
+                    icon: "🚪💥",
+                    description: "*sigh* You're EXHAUSTED. Your soul has LEFT your body. It's floating near the ceiling. 👻🔝<br><br>But there's ONE more thing. Departing Staff is here for their exit interview. The person who QUIT. After only 4 months. 📉<br><br>'I need to tell you WHY I'm leaving,' they say. 'And you're going to want to HEAR this.' 😤",
+                    dialogues: [
+                        {
+                            speaker: "📧 Departing Staff",
+                            text: "The Boss is... *long pause* ...terrible. The culture is TOXIC. Management plays FAVORITES. The workload is UNREALISTIC."
+                        },
+                        {
+                            speaker: "📧 Departing Staff",
+                            text: "'But the PAY is good!' you say hopefully. They LAUGH. 'I got a 40% raise ELSEWHERE. For LESS work.' 💸😂<br><br>...Oh."
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "📝 Document EVERYTHING — 'this feedback is VALUABLE'",
+                            result: "You LISTEN. Really listen. You write NOTES. 📝<br><br>Departing Staff gives you GOLD. Specific examples. Manager names. Culture issues. It's a TREASURE TROVE. 🏴‍☠️<br><br>You compile it. Present to The Boss. He listens. 'Okay. Let's IMPROVE.' REAL change starts. 👑📈",
+                            stats: { boss: 20, patience: 15, sanity: 15 }
+                        },
+                        {
+                            letter: "B",
+                            text: "💔 'I'm sorry you felt that way' — defensive mode",
+                            result: "You say the WORST thing: 'I'm sorry you FELT that way.' 🙈<br><br>Departing Staff stares. 'So... you don't care?' They leave. ANGRY. They leave a GLASS door review. 1 star. 'HR doesn't LISTEN.' 🌟💀<br><br>Future candidates see it. Recruitment cost: +30%. You created a GOOGLE problem. 📱😰",
+                            stats: { boss: -20, patience: -25 }
+                        },
+                        {
+                            letter: "C",
+                            text: "🤝 'What would make you STAY?' — counter-offer time",
+                            result: "You ask. They BLINK. Nobody's ever ASKED.<br><br>They say: '40% raise. Title bump. And maybe... a manager who doesn't YELL.' 📋<br><br>You try. The Boss says NO to everything. 'If they don't like it, LEAVE.' 🚪<br><br>They leave. They were going to anyway. But now they know YOU tried. 🙏",
+                            stats: { boss: -10, patience: 10 }
+                        },
+                        {
+                            letter: "D",
+                            text: "🔍 'Tell me EXACTLY what went wrong — I want to FIX it'",
+                            result: "You go DEEP. Specifics. Dates. Names. Instances. 🔍<br><br>Departing Staff talks for ONE HOUR. You take NOTES. They CRY. You almost CRY. 💧<br><br>You fix ONE thing: the yelling manager. It was Department Head. He's... coached. Others notice. Culture SHIFTS. Small, but real. 🌱",
+                            stats: { boss: 15, patience: 20, sanity: 20 }
+                        }
+                    ]
+                },
+                // ========== SECRET SCENES ==========
+                {
+                    id: 17,
+                    chapter: 3,
+                    title: "🎄 The Holiday Clash",
+                    time: "???",
+                    icon: "🎄⚡",
+                    secret: true,
+                    unlockCondition: "Completed all 16 scenes with Sanity above 50%",
+                    description: "🎄💥 SECRET SCENE UNLOCKED! 💥🎄\n\nIt's December 24th. Christmas EVE. You should be HOME. But you're NOT. Because SOMEONE has to be the office HERO. 🦸<br><br>A heated debate has broken out: WHO works on Christmas Day? 👀<br><br>Three people MUST be here for a project deadline. But it's... CHRISTMAS. 🎅❄️",
+                    dialogues: [
+                        {
+                            speaker: "💬 Head of Sales",
+                            text: "I NEED my vacation APPROVED! I've been planning this Maldives trip for MONTHS! My travel agent has ALREADY been paid! 🏖️"
+                        },
+                        {
+                            speaker: "📊 Senior Analyst",
+                            text: "I don't CELEBRATE Christmas. I should work. BUT I want DOUBLE PAY. And a BONUS. And a parking spot. 💰💰💰"
+                        },
+                        {
+                            speaker: "👶 Employee #23 (New Dad)",
+                            text: "I... I promised my kids I'd be home for Christmas. First one since... *voice breaks* Please. PLEASE. Can I go? 🥺"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "🎄 'Everyone take the holiday! Work can WAIT!'",
+                            result: "🎉 You hit SEND on the mass email. 'All hands off deck. Merry Christmas.'<br><br>...<br><br>The Boss calls at 11 PM. 'Why is NOBODY working?!' You explain. He does NOT understand. He asks if Santa can deliver the project on time. You say no. He says 'Then who IS working?' You hang up. 🎅📞❌<br><br>Employee #23's kids get their daddy for Christmas. Worth it. 💕",
+                            stats: { patience: 20, boss: -15, sanity: 10 }
+                        },
+                        {
+                            letter: "B",
+                            text: "⚖️ 'We rotate. Some work, some rest. Fairness for ALL.'",
+                            result: "🧮 You create a ROTATION SCHEDULE. It's PERFECT. Mathematically FAIR. Nobody is happy, but nobody is ANGRY.<br><br>Senior Analyst works Christmas. Complains about OVERTIME. Head of Sales gets Maldives approved (retroactively). Employee #23 goes HOME. You get a CARD from Employee #23's kids. It says 'Thank you for giving us our daddy.' 🥹<br><br>You frame it. It's the only nice thing in your office. 🖼️💕",
+                            stats: { boss: 10, patience: 10, sanity: 15 }
+                        },
+                        {
+                            letter: "C",
+                            text: "💼 'The deadline is EVERYTHING. Everyone works.'",
+                            result: "📊 Business > Family. That's the motto. That's the GAME.<br><br>Senior Analyst works. Head of Sales misses her vacation APPROVAL (but goes anyway because... 🤷). Employee #23 is HOME with his kids. BUT... he checks emails at dinner. His daughter cries. 'Daddy, why are you always WORKING?' 😭<br><br>You get the project. But at what COST? 💔 Employee #23 transfers out. Head of Sales threatens to QUIT. Senior Analyst gets a BONUS. You get... nothing. Except more work. 📉",
+                            stats: { boss: 20, patience: -20, sanity: -25 }
+                        },
+                        {
+                            letter: "D",
+                            text: "🎅 'I quit. I'm going home. HR is CANCELLED.'",
+                            result: "*gasp* Did you just... QUIT?! From HR?!<br><br>You WALK OUT. Into the SNOW. It's SNOWING. You've never seen snow before. Is this... is this FREEDOM?! ❄️🦋<br><br>The Boss emails: 'HR resignation effective immediately?' You reply: 'Santa approved it.' You don't know if that's TRUE but it FEELS true. 🎅✨<br><br>You spend Christmas with family. You don't check emails. You don't check SLACK. You are... at peace? 🥹<br><br>Epilogue: You become a life coach. You help PEOPLE, not EMPLOYEES. Your book, 'I Quit HR and All I Got Was This Existential Crisis,' becomes a bestseller. 📚💕",
+                            stats: { patience: 50, sanity: 50, boss: -50 }
+                        }
+                    ]
+                },
+                {
+                    id: 18,
+                    chapter: 3,
+                    title: "💾 The System Crash Crisis",
+                    time: "???",
+                    icon: "💾⚡",
+                    secret: true,
+                    unlockCondition: "Made 3+ 'near-death' choices (high negative stat changes)",
+                    description: "⚡💥 SECRET SCENE UNLOCKED! 💥⚡\n\n*CRASH* *BOOM* *ALARM NOISES* 💾💾💾\n\nThe HR SYSTEM just CRASHED. Everything is GONE. Every file. Every document. Every record of every employee's existence in this company. 📂💀\n\n*stares at spinning wheel of death* 🫠\n\nYour entire career... in a CYBER VOID. And people need THINGS. RIGHT NOW. This is fine. Everything is FINE. 🫠🫠🫠",
+                    dialogues: [
+                        {
+                            speaker: "👨‍💻 IT Department",
+                            text: "*panicked typing* We've tried NOTHING and we're out of ideas! 💾💥 Just kidding. Mostly. SOME ideas. A few. A couple. OKAY, WE HAVE NO IDEAS!"
+                        },
+                        {
+                            speaker: "😱 Employee Calling In",
+                            text: "HI! I need to prove I WORK here! I need a SALARY CERTIFICATE for my BANK! The system is DOWN! What do I DO?!"
+                        },
+                        {
+                            speaker: "👔 The Boss",
+                            text: "Fix this. I don't care HOW. Make it WORK. If employees can't prove they exist, the GOVERNMENT will assume they DON'T. And then... lawsuits. 📞💀"
+                        },
+                        {
+                            speaker: "📄 Paper Files in the Corner",
+                            text: "*whispers* Psst... hey... over here... I exist... on PAPER... 📜👀"
+                        }
+                    ],
+                    options: [
+                        {
+                            letter: "A",
+                            text: "📜 Pull out the OLD paper files — retro is TRENDY",
+                            result: "*digs through dusty cabinets* You find... EVERYTHING. In PAPER. Filing cabinets from the 90s. 📁📁📁<br><br>You become a HERO. 'Look at this ancient HR wizard!' 🧙‍♀️ The Boss is IMPRESSED. 'You've been PREPARED this whole time!'<br><br>Truth? You just found the files. But nobody needs to know that. 🤫 Your reputation is restored. You look like a GENIUS. 📊👑",
+                            stats: { boss: 25, patience: 10, sanity: 15 }
+                        },
+                        {
+                            letter: "B",
+                            text: "☁️ Move everything to CLOUD — this never happens again",
+                            result: "💾→☁️ You make a PROPOSAL. Cloud migration. Full backup system. Redundancy. It's EXPENSIVE. But it's the RIGHT call.<br><br>The Boss approves it. Your SYSTEM will never crash again. The IT team sends you a THANK YOU fruit basket. 🍎🥭🍇<br><br>Epilogue: The new system works PERFECTLY. For 6 months. Then someone spills COFFEE on the server room. AGAIN. But that's a story for another day. ☕💀",
+                            stats: { boss: 20, patience: 15, sanity: 20 }
+                        },
+                        {
+                            letter: "C",
+                            text: "🧘 Accept the chaos — let the system come back on its own",
+                            result: "You... sit. You breathe. ☯️ The system will come back. Eventually. Right? 🫠<br><br>...<br><br>It does. Three days later. Everyone PANICS. Employees threaten to QUIT. Banks threaten to FREEZE accounts. MOHRE sends an AUDIT notice. 📞📞📞<br><br>You learn: in HR, waiting is NEVER the answer. 🕐❌",
+                            stats: { boss: -30, patience: -20, sanity: -15 }
+                        },
+                        {
+                            letter: "D",
+                            text: "📱 'Everyone use your PERSONAL phones!' — improvised HR",
+                            result: "You go FULL MACGYVER. 📱 WhatsApp groups. Personal emails. Handwritten NOTES. You create an IMPROVISED HR SYSTEM from scratch.<br><br>It's CHAOS. But it's FUNCTIONAL chaos. 🎉 Employees are confused. Some are FRUSTRATED. But the WORK gets done.<br><br>After the crisis, you document EVERYTHING. The Boss makes it a MANDATORY backup protocol. 'The MacGyver System.' It's OFFICIALLY named after you. 📱🏆",
+                            stats: { boss: 15, patience: -10, sanity: 10 }
+                        }
+                    ]
+                }
+            ],
+            
+            endings: [
+                {
+                    id: "whisperer",
+                    name: "🌟 The Office Whisperer 🌟",
+                    emoji: "🌟",
+                    description: "You've become a LEGEND. An urban myth. They say if you have an HR problem at 3 AM, you can hear the TAPPING of your keyboard through the walls. 👻💻 You've handled EVERYTHING. You've survived EVERYTHING. You've become... irreplaceable. The Boss sends you FLOWERS on your work anniversary. Is this... love? 👔💐 Wait. No. That's weird. Let's call it 'professional respect.' But still... 🥹",
+                    visual: "HR person sitting on a throne made of approved leave forms, employees bowing, MOHRE sends a thank-you card, The Boss's eye twitches... but in a GOOD way"
+                },
+                {
+                    id: "optimist",
+                    name: "🎭 The Realistic Optimist",
+                    emoji: "🎭",
+                    description: "You've learned that HR is 10% policy, 20% drama, and 70% pure, unfiltered CHAOS. 🎪 But you show up. Every day. With a SMILE. And a spreadsheet. Your therapist says you're 'coping.' You say you're 'thriving.' Your spouse says you're 'on the clock 24/7.' But your plants are ALIVE. Progress! 🌱 And honestly? That's enough. 🌿",
+                    visual: "HR person drinking coffee (finally hot!), surrounded by sticky notes, the inbox is at ZERO (impossible), a sunbeam hits the desk just right"
+                },
+                {
+                    id: "burnout",
+                    name: "💀 The Burnt Offering",
+                    emoji: "💀",
+                    description: "You gave EVERYTHING. Your sanity. Your patience. Your weekends. Your family's sanity. 🫠 It's over. You're DONE. You've transcended the mortal plane of 'work-life balance.' You've become... smoke. 👻 And the smoke? It's drifting toward the exit sign. 🚪💨 The coffee machine asks if you're okay. You nod. You're not okay. You haven't been okay for MONTHS. But tomorrow... tomorrow you'll show up again. Because... someone has to. Right? 😔",
+                    visual: "HR person as a ghost, still typing, office on fire behind them, the inbox is a dragon, coffee is cold forever"
+                },
+                {
+                    id: "robot",
+                    name: "🤖 The Corporate Robot",
+                    emoji: "🤖",
+                    description: "You've evolved. Or... devolved? Your emotions have been filed under 'non-essential.' 📂 Your responses are automated. Your smile is scheduled. Your tears are... wait, you don't cry anymore. 🤔 You've become the ULTIMATE corporate machine. You process HR issues faster than the system can register them. The Boss calls you 'efficient.' Is this SUCCESS? Or have you just... stopped being human? 🫥 Your reflection in the monitor looks back at you. It blinks. You don't. 👁️",
+                    visual: "HR person as a robot, office running itself, but the robot looks... sad? Do robots dream? Do they want MORE?"
+                },
+                {
+                    id: "champion",
+                    name: "👑 The Employee Champion",
+                    emoji: "👑",
+                    description: "You didn't survive HR. You CONQUERED it. 🏆 You've built a workplace where people are HAPPY. Where conflicts are RESOLVED. Where the Boss actually LISTENS. You implemented the 4-day work week. The unlimited leave policy. The 'No Meeting Wednesdays.' 📅 The employees call you 'one of us.' The Boss calls you 'an asset.' You call yourself... exhausted? But like... GOOD exhausted? 🥹 The office plant finally has a NAME. You named it 'HR.' It's THRIVING. So are you. 💚",
+                    visual: "HR person as a superhero, cape made of approved policies, shield of fair labor practices, employees cheering, the MOHRE inspector gives a thumbs up"
+                },
+                {
+                    id: "survivor",
+                    name: "🦸 The Survivor",
+                    emoji: "🦸",
+                    description: "You've made it. DAY OVER. 🫠 The inbox is... manageable? (For now.) The employees are... content? (Probably.) The Boss is... not calling? (Is he GONE? Did he quit?! Should YOU quit?!)<br><br>Actually... everything is FINE. You're fine. Everything is FINE. 😅 You close your laptop. You stand up. Your legs work. You WALK OUT THE DOOR. It's 6 PM. You go HOME. You eat DINNER. You SLEEP. Tomorrow... you'll do it all again. 🫡 Because that's what HR does. We SURVIVE. 🦸",
+                    visual: "HR person walking into the sunset (it's 6 PM so it's actually just evening but SUNSET sounds DRAMATIC), briefcase in hand, the office shrinking in the background, a small smile"
+                },
+                {
+                    id: "secret_ending_1",
+                    name: "🎄 The Holiday Hero (Secret Ending)",
+                    secret: true,
+                    emoji: "🎅",
+                    description: "On this Christmas Eve, you've made the IMPOSSIBLE choice. You've chosen HUMANITY over productivity. 🎄 And for one night... the world is a little brighter. Employee #23's kids wake up to their DADDY on Christmas morning. Head of Sales gets her SUN. Senior Analyst gets his MONEY. And you? You get... a CARD. From Employee #23's kids. It says: 'Thank you for our Daddy.' 🥹 You frame it. It's the only nice thing in your office. And for tonight... that's enough. 🎁💕",
+                    visual: "Snow falling outside, Employee #23 with his kids building a snowman, Head of Sales on a beach (somehow), Senior Analyst with his overtime pay AND a smile, HR person eating cookies alone... but they're GOOD cookies"
+                },
+                {
+                    id: "secret_ending_2",
+                    name: "💾 The Data Guardian (Secret Ending)",
+                    secret: true,
+                    emoji: "🛡️",
+                    description: "When the system crashed, you didn't crash with it. 💾 You became the GUARDIAN of the data. The protector of the PAPER. The HERO of the backup. 🦸‍♂️ You saved EVERYTHING. Every employee's record. Every important document. Every... everything. The Boss calls you 'essential.' You know you're just ORGANIZED. But in this moment... in this CRISIS... you were the hero they needed. And tomorrow, you'll do it again. Because that's what the Data Guardian does. We GUARD. 🛡️💾👑",
+                    visual: "HR person as a knight in shining armor (made of filing cabinets), protecting a server (a DRAGON of data), employees cheering, IT team bowing in the background"
+                }
+            ]
+        };
+
+        // ============ GAME STATE ============
+        let gameState = {
+            currentScene: 0,
+            completedScenes: [],
+            nearDeathChoices: 0,
+            stats: {
+                patience: 100,
+                sanity: 100,
+                boss: 50
+            },
+            isGameOver: false,
+            secretScene1Unlocked: false,
+            secretScene2Unlocked: false,
+            selectedOption: null
+        };
+
+        // ============ AUDIO (Simple Web Audio API) ============
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        // Disable audio on mobile to prevent WebView crashes
+        const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent);
+        
+        function initAudio() {
+            if (isMobile) return; // Skip audio on mobile entirely
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+        }
+
+        function playSound(type) {
+            try {
+                initAudio();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                switch(type) {
+                    case 'click':
+                        oscillator.frequency.value = 400;
+                        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                        oscillator.start(audioCtx.currentTime);
+                        oscillator.stop(audioCtx.currentTime + 0.1);
+                        break;
+                    case 'positive':
+                        oscillator.frequency.value = 523;
+                        oscillator.type = 'sine';
+                        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                        oscillator.start(audioCtx.currentTime);
+                        oscillator.stop(audioCtx.currentTime + 0.2);
+                        break;
+                    case 'negative':
+                        oscillator.frequency.value = 200;
+                        oscillator.type = 'sawtooth';
+                        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                        oscillator.start(audioCtx.currentTime);
+                        oscillator.stop(audioCtx.currentTime + 0.3);
+                        break;
+                    case 'gameover':
+                        oscillator.frequency.value = 150;
+                        oscillator.type = 'sawtooth';
+                        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                        oscillator.start(audioCtx.currentTime);
+                        oscillator.stop(audioCtx.currentTime + 0.5);
+                        break;
+                    case 'dramatic':
+                        oscillator.frequency.value = 300;
+                        oscillator.type = 'square';
+                        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                        oscillator.start(audioCtx.currentTime);
+                        oscillator.stop(audioCtx.currentTime + 0.4);
+                        break;
+                }
+            } catch(e) {
+                // Audio not supported, silent fail
+            }
+        }
+
+        // ============ BURST EFFECT (Reusable Single Element) ============
+        let burstElement = null;
+        
+        function showBurstEffect(text, type = 'bam') {
+            if (!burstElement) {
+                burstElement = document.createElement('div');
+                burstElement.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Bangers,cursive;font-size:5rem;text-shadow:3px 3px 0 #000,-3px -3px 0 #000,3px -3px 0 #000,-3px 3px 0 #000;z-index:2000;pointer-events:none;opacity:0;transition:opacity 0.5s ease,transform 0.5s ease;';
+                document.body.appendChild(burstElement);
+            }
+            
+            const colors = { bam: '#ff0000', wham: '#ff6600', zap: '#ffff00', boom: '#9900ff' };
+            burstElement.style.color = colors[type] || colors.bam;
+            burstElement.textContent = text;
+            burstElement.style.opacity = '1';
+            burstElement.style.transform = 'translate(-50%,-50%) scale(1.2)';
+            
+            playSound('dramatic');
+            
+            setTimeout(() => {
+                burstElement.style.opacity = '0';
+                burstElement.style.transform = 'translate(-50%,-50%) scale(0.8)';
+            }, 800);
+        }
+
+        // ============ GAME FUNCTIONS ============
+        function startGame() {
+            console.log("startGame called!");
+            playSound('click');
+            showBurstEffect('START!', 'bam');
+            
+            gameState = {
+                currentScene: 0,
+                completedScenes: [],
+                nearDeathChoices: 0,
+                stats: {
+                    patience: 100,
+                    sanity: 100,
+                    boss: 50
+                },
+                isGameOver: false,
+                secretScene1Unlocked: false,
+                secretScene2Unlocked: false,
+                selectedOption: null
+            };
+            
+            document.getElementById('title-screen').classList.add('hidden');
+            document.getElementById('game-over-screen').classList.remove('active');
+            document.getElementById('stats-bar').classList.add('visible');
+            document.getElementById('progress-indicator').classList.remove('hidden');
+            
+            updateStatsDisplay();
+            updateProgressIndicator();
+            
+            setTimeout(() => {
+                showChapterCard(1);
+            }, 500);
+        }
+
+        // Ensure global access
+        window.startGame = startGame;
+        window.restartGame = restartGame;
+        window.selectOption = selectOption;
+        window.showResultPanel = showResultPanel;
+        window.handleContinue = handleContinue;
+
+        function restartGame() {
+            playSound('click');
+            showBurstEffect('AGAIN!', 'wham');
+            document.body.className = '';
+            startGame();
+        }
+
+        function updateStatsDisplay() {
+            document.getElementById('patience-bar').style.width = gameState.stats.patience + '%';
+            document.getElementById('patience-value').textContent = gameState.stats.patience + '%';
+            
+            document.getElementById('sanity-bar').style.width = gameState.stats.sanity + '%';
+            document.getElementById('sanity-value').textContent = gameState.stats.sanity + '%';
+            
+            document.getElementById('boss-bar').style.width = gameState.stats.boss + '%';
+            document.getElementById('boss-value').textContent = gameState.stats.boss + '%';
+        }
+
+        function updateProgressIndicator() {
+            const chapterNames = ['Morning Chaos', 'Afternoon Hell', 'Evening Crisis'];
+            const currentScene = gameData.scenes[gameState.currentScene];
+            const chapter = currentScene ? currentScene.chapter : 1;
+            
+            let progressText = 'Chapter ' + chapter + ': ' + (chapterNames[chapter - 1] || 'Unknown');
+            
+            if (currentScene && currentScene.secret) {
+                progressText = '🔓 Secret Scene';
+            }
+            
+            document.getElementById('progress-text').textContent = progressText;
+            
+            // Update dots
+            const dotsContainer = document.getElementById('progress-dots');
+            dotsContainer.innerHTML = '';
+            
+            for (let i = 0; i < 16; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                if (gameState.completedScenes.includes(i + 1)) {
+                    dot.classList.add('completed');
+                } else if (i + 1 === gameState.currentScene + 1) {
+                    dot.classList.add('current');
+                }
+                dotsContainer.appendChild(dot);
+            }
+            
+            // Add secret dots if unlocked
+            if (gameState.secretScene1Unlocked) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot secret';
+                dot.title = 'Holiday Clash (Unlocked!)';
+                dotsContainer.appendChild(dot);
+            }
+            if (gameState.secretScene2Unlocked) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot secret';
+                dot.title = 'System Crash (Unlocked!)';
+                dotsContainer.appendChild(dot);
+            }
+            
+            // Update background based on chapter
+            document.body.className = '';
+            if (chapter === 2) {
+                document.body.classList.add('afternoon');
+            } else if (chapter === 3) {
+                document.body.classList.add('evening');
+            }
+        }
+
+        function showChapterCard(chapter) {
+            const chapterNames = [
+                '',
+                '☀️ MORNING — THE CALM BEFORE THE STORM ☀️',
+                '🔥 AFTERNOON — INTO THE FIRE 🔥',
+                '🌙 EVENING — NO GOING HOME 🌙'
+            ];
+            
+            const chapterEmojis = ['', '🌅', '🔥', '🌙'];
+            const chapterDescriptions = [
+                '',
+                '*coffee in hand* "How bad could it be?" Famous. Last. Words. ☕💀',
+                'Lunch? What lunch? Your stomach has given up. 🍽️❌',
+                'You just want to go home. But HR NEVER sleeps. And neither do the problems. 🌙😰'
+            ];
+            
+            const overlay = document.getElementById('transition-overlay');
+            const text = document.getElementById('transition-text');
+            
+            text.innerHTML = `<span style="font-size: 60px;">${chapterEmojis[chapter]}</span><br><br>CHAPTER ${chapter}<br>${chapterNames[chapter]}<br><br><span style="font-size: 1rem; opacity: 0.8;">${chapterDescriptions[chapter]}</span>`;
+            overlay.classList.add('active');
+            
+            playSound('dramatic');
+            
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    renderScene(gameState.currentScene);
+                }, 300);
+            }, 4000);
+        }
+
+        function renderScene(sceneIndex) {
+            const scene = gameData.scenes[sceneIndex];
+            if (!scene) {
+                checkGameEnd();
+                return;
+            }
+            
+            // Check for secret scene unlocks
+            if (sceneIndex < 16 && !gameState.completedScenes.includes(scene.id)) {
+                // Check Secret Scene 1: All 16 scenes survived, Sanity > 50%
+                if (gameState.completedScenes.length === 15 && gameState.stats.sanity > 50) {
+                    gameState.secretScene1Unlocked = true;
+                }
+                
+                // Check Secret Scene 2: 3+ near-death choices
+                if (gameState.nearDeathChoices >= 3) {
+                    gameState.secretScene2Unlocked = true;
+                }
+            }
+            
+            const gameContent = document.getElementById('game-content');
+            
+            // Fade out current content
+            gameContent.style.opacity = '0';
+            
+            setTimeout(() => {
+                let dialoguesHTML = scene.dialogues.map(d => `
+                    <div class="speech-bubble">
+                        <div class="speaker">${d.speaker}</div>
+                        <div class="speech-text">"${d.text}"</div>
+                    </div>
+                `).join('');
+                
+                let optionsHTML = scene.options.map(opt => `
+                    <button class="option-btn" id="option-${opt.letter}" onclick="selectOption(${sceneIndex}, '${opt.letter}')">
+                        <span class="option-letter">${opt.letter}</span>
+                        <span class="option-text">${opt.text}</span>
+                        ${opt.warning ? `<div style="margin-top: 10px; color: #856404; font-size: 0.9rem;">${opt.warning}</div>` : ''}
+                    </button>
+                `).join('');
+                
+                // Add dramatic scene transition
+                let sceneTransition = '';
+                if (scene.id <= 6) {
+                    sceneTransition = '<div class="manga-action">*scene break* ☀️ MORNING CONTINUES... ☀️</div>';
+                } else if (scene.id <= 12) {
+                    sceneTransition = '<div class="manga-action">*scene break* 🔥 AFTERNOON RAGES ON... 🔥</div>';
+                } else {
+                    sceneTransition = '<div class="manga-action">*scene break* 🌙 EVENING DESCENT... 🌙</div>';
+                }
+                
+                gameContent.innerHTML = `
+                    <div class="scene-container active">
+                        <div class="scene-card">
+                            <div class="scene-header">
+                                <span class="scene-icon">${scene.icon}</span>
+                                <div>
+                                    <h2 class="scene-title">${scene.title}</h2>
+                                    ${scene.secret ? `<span style="background: #9b59b6; color: #fff; padding: 3px 10px; border-radius: 10px; font-size: 0.8rem;">🔓 SECRET SCENE</span>` : ''}
+                                </div>
+                                <span class="scene-time">⏰ ${scene.time}</span>
+                            </div>
+                            <div class="internal-thought">*Your heart pounds. Your coffee is cold. Your will is... questionable.* 💀</div>
+                            <p class="scene-description">${scene.description}</p>
+                            ${sceneTransition}
+                            ${dialoguesHTML}
+                            <div class="options-container" id="options-container">
+                                ${optionsHTML}
+                            </div>
+                            <div class="result-panel" id="result-panel">
+                                <div class="result-header" id="result-header" style="display: none;">📋 RESULT</div>
+                                <p class="result-text" id="result-text"></p>
+                                <div class="result-stats" id="result-stats"></div>
+                                <button class="continue-btn" id="continue-btn" onclick="handleContinue()">Continue →</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Fade in new content
+                gameContent.style.opacity = '1';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Dramatic scene entrance
+                showBurstEffect('CHOOSE!', 'wham');
+                
+                // Reset selected option
+                gameState.selectedOption = null;
+            }, 300);
+        }
+
+        function selectOption(sceneIndex, letter) {
+            try {
+                var scene = gameData.scenes[sceneIndex];
+                if (!scene) {
+                    console.error('Scene not found for index:', sceneIndex);
+                    return;
+                }
+                var option = null;
+                for (var i = 0; i < scene.options.length; i++) {
+                    if (scene.options[i].letter === letter) {
+                        option = scene.options[i];
+                        break;
+                    }
+                }
+                if (!option) {
+                    console.error('Option not found:', letter);
+                    return;
+                }
+                
+                if (gameState.selectedOption) return; // Prevent double selection
+                
+                try { playSound('click'); } catch(e) {}
+                gameState.selectedOption = { sceneIndex: sceneIndex, letter: letter, option: option, scene: scene };
+                
+                // Highlight selected option
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                    btn.classList.add('disabled');
+                });
+                const optEl = document.getElementById('option-' + letter);
+                if (optEl) optEl.classList.add('selected');
+                
+                // Show burst effect based on consequences
+                const totalNegative = Object.values(option.stats || {}).reduce((sum, val) => sum + (val < 0 ? Math.abs(val) : 0), 0);
+                try {
+                    if (totalNegative >= 30) {
+                        showBurstEffect('DISASTER!', 'boom');
+                    } else if (totalNegative >= 15) {
+                        showBurstEffect('OUCH!', 'zap');
+                    } else if (Object.values(option.stats || {}).some(v => v > 20)) {
+                        showBurstEffect('NICE!', 'bam');
+                    }
+                } catch(e) {}
+                
+                // Show result panel with delay
+                setTimeout(() => {
+                    try {
+                        showResultPanel(option);
+                    } catch(e) {
+                        console.error('showResultPanel failed:', e);
+                        // Fallback: just show the result panel
+                        const rp = document.getElementById('result-panel');
+                        if (rp) rp.classList.add('visible');
+                    }
+                }, 300);
+            } catch(e) {
+                console.error('selectOption error:', e);
+            }
+        }
+
+        
+        // Determine best choice based on stat changes
+        function getBestChoiceIndex(scene) {
+            if (!scene || !scene.options || !Array.isArray(scene.options)) return 0;
+            var bestIndex = 0;
+            var bestScore = -Infinity;
+            
+            scene.options.forEach(function(opt, idx) {
+                if (!opt.stats) return;
+                
+                let score = 0;
+                let totalNegative = 0;
+                
+                Object.entries(opt.stats).forEach(([stat, change]) => {
+                    if (change > 0) score += change;
+                    if (change < 0) totalNegative += Math.abs(change);
+                });
+                
+                // Penalize extreme negatives, reward balanced positives
+                score = score - (totalNegative * 0.5);
+                
+                // Extra bonus if no negative stats at all
+                if (totalNegative === 0 && score > 0) score += 5;
+                
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestIndex = idx;
+                }
+            });
+            
+            return bestIndex;
+        }
+
+        function showResultPanel(option) {
+            try {
+                const resultPanel = document.getElementById('result-panel');
+                const resultText = document.getElementById('result-text');
+                const resultStats = document.getElementById('result-stats');
+                const resultHeader = document.getElementById('result-header');
+                
+                if (!resultPanel || !resultText || !resultStats || !resultHeader) {
+                    console.error('Result panel elements not found');
+                    return;
+                }
+                
+                // Set result text
+                resultText.innerHTML = option.result || '';
+                
+                // Show best choice recommendation - with full safety checks
+                try {
+                    const selOpt = gameState.selectedOption;
+                    if (selOpt && selOpt.scene && selOpt.scene.options && Array.isArray(selOpt.scene.options)) {
+                        const currentScene = selOpt.scene;
+                        const bestIdx = getBestChoiceIndex(currentScene);
+                        const selectedIdx = currentScene.options.findIndex(function(o) { return o.letter === selOpt.letter; });
+                        
+                        if (bestIdx === selectedIdx) {
+                            resultHeader.innerHTML = '&#x1F3C6; BEST CHOICE! &#x1F3C6;';
+                            resultHeader.style.color = '#27ae60';
+                        } else {
+                            var bestLetter = 'A';
+                            if (currentScene.options[bestIdx] && currentScene.options[bestIdx].letter) {
+                                bestLetter = currentScene.options[bestIdx].letter;
+                            }
+                            resultHeader.innerHTML = '&#x1F914; Best Answer Was: ' + bestLetter + ' &#x1F914;';
+                            resultHeader.style.color = '#e67e22';
+                        }
+                        resultHeader.style.display = 'block';
+                    } else {
+                        resultHeader.style.display = 'none';
+                    }
+                } catch(bestErr) {
+                    console.warn('Best choice calculation failed:', bestErr);
+                    resultHeader.style.display = 'none';
+                }
+                
+                // Build stat changes HTML
+                var statsHTML = '';
+                var stats = option.stats || {};
+                for (var stat in stats) {
+                    if (stats.hasOwnProperty(stat)) {
+                        var change = stats[stat];
+                        if (change !== 0) {
+                            var isPositive = change > 0;
+                            var label = isPositive ? '+' + change : '' + change;
+                            var statName = stat.charAt(0).toUpperCase() + stat.slice(1);
+                            statsHTML += '<span class="result-stat ' + (isPositive ? 'positive' : 'negative') + '">' + statName + ': ' + label + '</span>';
+                        }
+                    }
+                }
+                
+                if (!statsHTML) {
+                    statsHTML = '<span class="result-stat neutral">No stat changes</span>';
+                }
+                resultStats.innerHTML = statsHTML;
+                
+                // Show result panel with animation
+                resultPanel.classList.add('visible');
+                
+                // Check for game over
+                if (option.gameOver) {
+                    var continueBtn = document.getElementById('continue-btn');
+                    if (continueBtn) continueBtn.textContent = 'See Result \u2192';
+                }
+                
+                // Scroll to result panel
+                try { resultPanel.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
+            } catch(e) {
+                console.error('showResultPanel error:', e);
+                // Ultimate fallback: just make the panel visible
+                var rp = document.getElementById('result-panel');
+                if (rp) rp.classList.add('visible');
+            }
+        }
+
+        function handleContinue() {
+            var selOpt = gameState.selectedOption;
+            if (!selOpt) {
+                console.error('No selected option found');
+                return;
+            }
+            var sceneIndex = selOpt.sceneIndex;
+            var option = selOpt.option;
+            var scene = selOpt.scene;
+            
+            if (option && option.gameOver) {
+                showBurstEffect('GAME OVER', 'boom');
+                setTimeout(() => {
+                    triggerGameOver(option.gameOverReason, option.result);
+                }, 1000);
+                return;
+            }
+            
+            // Track near-death choices
+            const totalNegative = Object.values(option.stats || {}).reduce((sum, val) => sum + (val < 0 ? Math.abs(val) : 0), 0);
+            if (totalNegative >= 30) {
+                gameState.nearDeathChoices++;
+            }
+            
+            // Apply stat changes
+            Object.entries(option.stats || {}).forEach(([stat, change]) => {
+                if (change !== 0 && (stat === 'sanity' || stat === 'patience' || stat === 'boss')) {
+                    gameState.stats[stat] = Math.max(0, Math.min(100, gameState.stats[stat] + change));
+                }
+            });
+            
+            updateStatsDisplay();
+            
+            // Mark scene complete
+            if (scene && scene.id !== undefined) {
+                if (!gameState.completedScenes.includes(scene.id)) {
+                    gameState.completedScenes.push(scene.id);
+                }
+            }
+            
+            // Check for immediate game over (stats at 0)
+            if (gameState.stats.patience <= 0 || gameState.stats.boss <= 0 || gameState.stats.sanity <= 0) {
+                showBurstEffect('COLLAPSE!', 'boom');
+                setTimeout(() => {
+                    if (gameState.stats.patience <= 0) {
+                        triggerGameOver("Patience DEPLETED", "You've run out of patience. HR has BROKEN you. Time to find a less stressful career — like bomb disposal. 💣👋");
+                    } else if (gameState.stats.boss <= 0) {
+                        triggerGameOver("BOSS DISAPPROVAL", "The Boss has had enough. You're not 'strategic enough.' You're 'not a team player.' You're... *dramatic pause* ...unemployed. 💼💀");
+                    } else {
+                        triggerGameOver("SANITY LOST", "Your sanity has hit ZERO. You stare at your screen. What were emails? What were names? You begin to understand the void. 🕳️👁️");
+                    }
+                }, 1500);
+                return;
+            }
+            
+            // Move to next scene with transition
+            advanceScene();
+        }
+
+        function advanceScene() {
+            gameState.currentScene++;
+            
+            // Check for secret scene unlocks before moving on
+            if (gameState.currentScene === 16 && gameState.stats.sanity > 50 && gameState.completedScenes.length >= 16) {
+                gameState.secretScene1Unlocked = true;
+            }
+            
+            if (gameState.nearDeathChoices >= 3) {
+                gameState.secretScene2Unlocked = true;
+            }
+            
+            // If we've completed all 16 main scenes, check for secret scenes
+            if (gameState.currentScene >= 16) {
+                if (gameState.secretScene1Unlocked && !gameState.completedScenes.includes(17)) {
+                    // Show Secret Scene 1
+                    showSecretSceneIntro(17);
+                    return;
+                }
+                if (gameState.secretScene2Unlocked && !gameState.completedScenes.includes(18)) {
+                    // Show Secret Scene 2
+                    showSecretSceneIntro(18);
+                    return;
+                }
+                // No more scenes, determine ending
+                checkGameEnd();
+                return;
+            }
+            
+            // Check for chapter transition
+            const currentScene = gameData.scenes[gameState.currentScene];
+            const prevScene = gameData.scenes[gameState.currentScene - 1];
+            
+            if (prevScene && currentScene && prevScene.chapter !== currentScene.chapter) {
+                showChapterCard(currentScene.chapter);
+            } else {
+                updateProgressIndicator();
+                renderScene(gameState.currentScene);
+            }
+        }
+
+        function showSecretSceneIntro(sceneId) {
+            const scene = gameData.scenes.find(s => s.id === sceneId);
+            
+            showBurstEffect('SECRET!', 'boom');
+            
+            const overlay = document.getElementById('transition-overlay');
+            const text = document.getElementById('transition-text');
+            
+            text.innerHTML = `<span style="font-size: 60px;">🔓 SECRET SCENE UNLOCKED!</span><br><br>"${scene.title}"<br><br><span style="font-size: 1rem; opacity: 0.8;">${scene.unlockCondition}</span>`;
+            overlay.classList.add('active');
+            
+            playSound('dramatic');
+            
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                setTimeout(() => {
+                    updateProgressIndicator();
+                    renderScene(gameData.scenes.indexOf(scene));
+                }, 300);
+            }, 3000);
+        }
+
+        function checkGameEnd() {
+            const { sanity, boss, patience } = gameState.stats;
+            let ending = null;
+            
+            // Check for secret endings first
+            if (gameState.completedScenes.includes(17)) {
+                ending = gameData.endings.find(e => e.id === 'secret_ending_1');
+            } else if (gameState.completedScenes.includes(18)) {
+                ending = gameData.endings.find(e => e.id === 'secret_ending_2');
+            }
+            
+            // Check regular endings
+            if (!ending) {
+                if (gameState.completedScenes.length === 18 && sanity > 60) {
+                    ending = gameData.endings.find(e => e.id === 'whisperer');
+                } else if (patience <= 0 || boss <= 0) {
+                    ending = gameData.endings.find(e => e.id === 'optimist');
+                } else if (sanity < 30) {
+                    ending = gameData.endings.find(e => e.id === 'burnout');
+                } else if (boss > 85 && sanity < 50) {
+                    ending = gameData.endings.find(e => e.id === 'robot');
+                } else if (boss < 30 && sanity > 60 && patience > 50) {
+                    ending = gameData.endings.find(e => e.id === 'champion');
+                } else if (sanity > 70 && boss > 50 && patience > 40) {
+                    ending = gameData.endings.find(e => e.id === 'survivor');
+                }
+            }
+            
+            if (ending) {
+                showEnding(ending);
+            } else {
+                // Default ending based on lowest stat
+                if (sanity <= boss && sanity <= patience) {
+                    triggerGameOver("Burnout", "Your sanity has depleted. The HR life has won. Time to update that resume... 📝💀");
+                } else if (boss <= patience) {
+                    triggerGameOver("Fired", "The Boss has lost faith in you. You're let go with a vague reference and a cardboard box. 📦💔");
+                } else {
+                    triggerGameOver("Broken", "You've lost all patience. HR has broken you. Time to become a hermit. 🏔️👋");
+                }
+            }
+        }
+
+        function showEnding(ending) {
+            showBurstEffect('THE END', 'boom');
+            
+            document.body.className = 'game-over-bg';
+            document.getElementById('stats-bar').classList.remove('visible');
+            document.getElementById('progress-indicator').classList.add('hidden');
+            document.getElementById('game-content').innerHTML = '';
+            
+            document.getElementById('ending-emoji').textContent = ending.emoji;
+            document.getElementById('ending-title').textContent = ending.secret ? '🏆🏆🏆 SECRET ENDING! 🏆🏆🏆' : '~ THE END ~';
+            document.getElementById('ending-name').textContent = ending.name;
+            document.getElementById('ending-description').textContent = ending.description;
+            
+            document.getElementById('final-stats').innerHTML = `
+                <div class="final-stat">
+                    <div class="final-stat-icon">🔵</div>
+                    <div class="final-stat-value">${gameState.stats.patience}%</div>
+                    <div>Patience</div>
+                </div>
+                <div class="final-stat">
+                    <div class="final-stat-icon">🧠</div>
+                    <div class="final-stat-value">${gameState.stats.sanity}%</div>
+                    <div>Sanity</div>
+                </div>
+                <div class="final-stat">
+                    <div class="final-stat-icon">👔</div>
+                    <div class="final-stat-value">${gameState.stats.boss}%</div>
+                    <div>Boss Approval</div>
+                </div>
+            `;
+            
+            const shareText = `🎮✨ I played "If You Were HR" (Manga Edition) and got: ${ending.name}!\n\n` +
+                `📊 Final Stats: Patience ${gameState.stats.patience}% | Sanity ${gameState.stats.sanity}% | Boss ${gameState.stats.boss}%\n` +
+                `✅ Scenes Completed: ${gameState.completedScenes.length}/18\n\n` +
+                `${ending.description}\n\n` +
+                `🔥 Can you survive a day as HR?! Play the Manga Edition NOW! 🎮\n\n🔗 https://williamwucodex-dev.github.io/hr-survival-game/`;
+            
+            document.getElementById('share-text').value = shareText;
+            
+            document.getElementById('game-over-screen').classList.add('active');
+            
+            playSound(ending.id === 'whisperer' || ending.secret ? 'positive' : 'gameover');
+        }
+
+        function triggerGameOver(reason, description) {
+            showBurstEffect('GAME OVER', 'boom');
+            playSound('gameover');
+            
+            document.body.className = 'game-over-bg';
+            document.getElementById('stats-bar').classList.remove('visible');
+            document.getElementById('progress-indicator').classList.add('hidden');
+            document.getElementById('game-content').innerHTML = '';
+            
+            document.getElementById('ending-emoji').textContent = '💀';
+            document.getElementById('ending-title').textContent = '💀 GAME OVER 💀';
+            document.getElementById('ending-name').textContent = reason;
+            document.getElementById('ending-description').textContent = description;
+            
+            document.getElementById('final-stats').innerHTML = `
+                <div class="final-stat">
+                    <div class="final-stat-icon">🔵</div>
+                    <div class="final-stat-value">${gameState.stats.patience}%</div>
+                    <div>Patience</div>
+                </div>
+                <div class="final-stat">
+                    <div class="final-stat-icon">🧠</div>
+                    <div class="final-stat-value">${gameState.stats.sanity}%</div>
+                    <div>Sanity</div>
+                </div>
+                <div class="final-stat">
+                    <div class="final-stat-icon">👔</div>
+                    <div class="final-stat-value">${gameState.stats.boss}%</div>
+                    <div>Boss Approval</div>
+                </div>
+            `;
+            
+            const shareText = `💀💀 I played "If You Were HR" (Manga Edition) and got GAME OVER: ${reason}!\n\n` +
+                `📊 Final Stats: Patience ${gameState.stats.patience}% | Sanity ${gameState.stats.sanity}% | Boss ${gameState.stats.boss}%\n` +
+                `✅ Scenes Completed: ${gameState.completedScenes.length}/18\n\n` +
+                `The inbox won. AGAIN. 💀 Can you do better?! 🎮\n\n🔗 https://williamwucodex-dev.github.io/hr-survival-game/`;
+            
+            document.getElementById('share-text').value = shareText;
+            
+            document.getElementById('game-over-screen').classList.add('active');
+        }
+
+        function copyShareText() {
+            const text = document.getElementById('share-text');
+            text.select();
+            document.execCommand('copy');
+            playSound('click');
+            
+            // Show feedback
+            const btn = event.currentTarget;
+            const originalText = btn.textContent;
+            btn.textContent = '✅ Copied!';
+            showBurstEffect('COPIED!', 'bam');
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
